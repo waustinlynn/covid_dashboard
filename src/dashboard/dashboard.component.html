@@ -1,0 +1,6 @@
+<p-chart type="line" [data]="data" (onDataSelect)="selectData($event)"></p-chart>
+<hr />
+<p-dropdown [options]="recordProperties" (onChange)="usRecordSelected($event)" placeholder="Select a property"
+    [showClear]="true"></p-dropdown>
+
+<p-chart type="line" [data]="usData"></p-chart>
