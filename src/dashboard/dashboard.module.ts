@@ -8,16 +8,31 @@ import { DashService } from './dash.service';
 import { HttpClientModule } from '@angular/common/http';
 
 import { ChartModule } from 'primeng/chart';
-import { DropdownModule } from 'primeng/dropdown';
+import { MatSelectModule } from '@angular/material/select';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+
+import { StateComponent } from './state/state.component';
+import { NationalComponent } from './national/national.component';
+import { StateSelectorComponent } from './state-selector/state-selector.component';
+
 
 @NgModule({
-  declarations: [DashboardComponent, DashhomeComponent],
+  declarations: [DashboardComponent, DashhomeComponent, StateComponent, NationalComponent, StateSelectorComponent],
   imports: [
     CommonModule,
     HttpClientModule,
     ChartModule,
-    DropdownModule,
-    DashboardRoutingModule
+    MatSelectModule,
+    DashboardRoutingModule,
+    MatExpansionModule,
+    MatDividerModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatListModule
   ],
   providers: [DashService]
 })

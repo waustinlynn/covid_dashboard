@@ -1,0 +1,22 @@
+<mat-accordion>
+    <mat-expansion-panel #expPanel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Select States
+            </mat-panel-title>
+            <!-- <mat-panel-description>
+                Type your name and age
+            </mat-panel-description> -->
+        </mat-expansion-panel-header>
+        <!-- <span class="selection"> -->
+        <mat-list>
+            <span *ngFor="let state of states">
+                <mat-checkbox (change)="stateChecked(state, $event)">{{state}}</mat-checkbox>
+                <mat-divider></mat-divider>
+            </span>
+        </mat-list>
+        <!-- </span> -->
+        <button mat-raised-button (click)="apply()">Apply</button>
+
+    </mat-expansion-panel>
+</mat-accordion>

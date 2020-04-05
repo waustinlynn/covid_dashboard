@@ -1,83 +1,55 @@
 import { Component, OnInit } from '@angular/core';
-import { DashService } from './dash.service';
+import { DashService } from '../dash.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  templateUrl: './state.component.html',
+  styleUrls: ['./state.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class StateComponent implements OnInit {
 
-  usDataOrig: any[];
+  stateOrigData: any[];
   gaData: any;
-  usData: any;
   gaHistoricalData: any[];
   data: any;
-  applicableStates = ['GA', 'LA', 'WA', 'CA', 'NY', 'NJ', 'MI', 'OH', 'FL'];
+  applicableStates = ['GA', 'SC', 'NC', 'TN', 'AL', 'MS', 'OH'];
   dateLabels: string[] = [];
+  states: string[] = [];
+  properties: string[] = [];
+  filterProperty: string = 'positiveIncrease';
 
-  recordProperties: any[];
   constructor(private dashService: DashService) { }
 
   ngOnInit(): void {
     this.dashService.getStateCurrent().subscribe(r => {
       this.gaData = r.find(r => r.state == 'GA');
+      this.states = r.map(r => r.state);
     });
 
     this.dashService.getStateDaily().subscribe(r => {
       this.gaHistoricalData = r.filter(r => r.state == 'GA');
-      console.log('historical', {
-        data: this.gaHistoricalData
-      });
       this.dateLabels = this.gaHistoricalData.map(el => el.date).reverse();
-
       // this.data = this.getGaData();
-      let that = this;
-      this.data = r.reduce(this.historicalReduction(this.applicableStates), this._seedDataObj());
-      this.data.labels = this.dateLabels;
-      console.log(this.data);
-    });
-    this.dashService.getUsDaily().subscribe(r => {
-      console.log('usdaily', r);
-      this.usDataOrig = r;
-      this.setUsData('positiveIncrease');
-      this.setRecordProperties(r);
+      this.stateOrigData = r;
+      this.properties = Object.keys(this.stateOrigData[0]).filter(key => !isNaN(this.stateOrigData[0][key]));
+      this.reloadStates(this.applicableStates);
     });
   }
 
-  setRecordProperties(dataSet) {
-    this.recordProperties = Object.keys(dataSet[0])
-      .filter(key => !isNaN(dataSet[0][key]))
-      .map(el => {
-        return { label: el, value: el };
-      });
-    console.log(this.recordProperties);
+  reloadStates(states: string[]) {
+    this.data = this.stateOrigData.reduce(this.historicalReduction(states), this._seedDataObj(states));
+    this.data.labels = this.dateLabels;
   }
 
-  setUsData(filterValue) {
-    this.usData = this.usDataOrig.reduce((acc, val, currIdx, origArr) => {
-      acc.us.data.push(val[filterValue]);
-      acc.labels.push(val.date);
-      if (currIdx == origArr.length - 1) {
-        acc.us.data = acc.us.data.reverse();
-        acc.labels = acc.labels.reverse();
-        acc.datasets.push(acc.us);
-      }
-      return acc;
-    }, {
-      labels: [],
-      datasets: [],
-      us: {
-        label: filterValue,
-        data: [],
-        fill: false,
-        borderColor: '#4bc0c0'
-      }
-    });
-  }
-
-  selectData(event) {
+  statesSelected(event) {
     console.log(event);
+    this.applicableStates = event;
+    this.reloadStates(event);
+  }
+
+  propertiesSelected(event) {
+    console.log(event);
+    this.filterProperty = event[0];
+    this.reloadStates(this.applicableStates);
   }
 
   getGaData() {
@@ -95,7 +67,7 @@ export class DashboardComponent implements OnInit {
         labels: [],
         datasets: [],
         posIncrease: {
-          label: 'Positive Increase',
+          label: this.filterProperty,
           data: [],
           fill: false,
           borderColor: '#4bc0c0'
@@ -112,7 +84,7 @@ export class DashboardComponent implements OnInit {
     return (acc, val, currIdx, origArr) => {
       let state = val.state;
       if (states.includes(state)) {
-        acc[state].data.push(val.positiveIncrease)
+        acc[state].data.push(val[this.filterProperty]);
       }
       if (currIdx == origArr.length - 1) {
         states.forEach(st => {
@@ -125,12 +97,12 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  private _seedDataObj() {
+  private _seedDataObj(states) {
     let obj = {
       labels: [],
       datasets: []
     };
-    this.applicableStates.forEach(el => {
+    states.forEach(el => {
       obj[el] = {
         label: el,
         data: [],
@@ -141,8 +113,4 @@ export class DashboardComponent implements OnInit {
     return obj;
   }
 
-  usRecordSelected(event) {
-    console.log(event);
-    this.setUsData(event.value);
-  }
 }

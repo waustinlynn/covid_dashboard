@@ -1,3 +1,11 @@
-<h1>COVID 19 Tracking</h1>
-<hr />
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <span>COVID 19 Trends</span>
+        <span class="example-spacer"></span>
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" (change)="itemChanged($event)">
+            <mat-button-toggle value="states">State Data</mat-button-toggle>
+            <mat-button-toggle value="national">US Data</mat-button-toggle>
+        </mat-button-toggle-group>
+    </mat-toolbar-row>
+</mat-toolbar>
 <router-outlet></router-outlet>

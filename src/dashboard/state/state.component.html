@@ -1,0 +1,6 @@
+<div style="width: 400px">
+    <app-state-selector [states]="states" (statesSelected)="statesSelected($event)"></app-state-selector>
+    <span class="example-spacer"></span>
+    <app-state-selector [states]="properties" (statesSelected)="propertiesSelected($event)"></app-state-selector>
+</div>
+<p-chart type="line" [data]="data"></p-chart>
