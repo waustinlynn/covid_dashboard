@@ -9,6 +9,7 @@ import { MatExpansionPanel } from '@angular/material/expansion';
 export class StateSelectorComponent implements OnInit, OnChanges {
 
   @Input() states: string[] = [];
+  @Input() title: string = 'Select States';
   @Output() statesSelected: EventEmitter<string[]> = new EventEmitter();
   @ViewChild('expPanel') expPanel: MatExpansionPanel;
   stateMap: any;
@@ -42,6 +43,5 @@ export class StateSelectorComponent implements OnInit, OnChanges {
         return acc;
       }, [])
     );
-    this.expPanel.close();
   }
 }

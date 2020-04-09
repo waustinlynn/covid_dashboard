@@ -1,13 +1,4 @@
-<div class="element">
-    <mat-form-field>
-        <mat-label>Select property</mat-label>
-        <mat-select (selectionChange)="usRecordSelected($event)">
-            <mat-option *ngFor="let prop of recordProperties" [value]="prop.value">
-                {{prop.label}}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-</div>
+<button mat-raised-button (click)="selectProperties()">Select Properties</button>
 <div class="element">
     <p-chart type="line" [data]="usData"></p-chart>
 </div>

@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DashService } from '../dash.service';
+import { MatDialog } from '@angular/material/dialog';
+import { StateSelectorComponent } from '../state-selector/state-selector.component';
+import { first } from 'rxjs/operators';
 
 @Component({
   templateUrl: './national.component.html',
@@ -9,10 +12,10 @@ export class NationalComponent implements OnInit {
 
   usDataOrig: any[];
   usData: any;
-  filterValues: string[] = ['hospitalizedCurrently', 'inIcuCurrently', 'onVentilatorCurrently'];
+  filterValues: string[] = ['positiveIncrease'];
 
   recordProperties: any[];
-  constructor(private dashService: DashService) { }
+  constructor(private dashService: DashService, public modal: MatDialog) { }
 
   ngOnInit(): void {
     this.dashService.getUsDaily().subscribe(r => {
@@ -24,10 +27,7 @@ export class NationalComponent implements OnInit {
 
   setRecordProperties(dataSet) {
     this.recordProperties = Object.keys(dataSet[0])
-      .filter(key => !isNaN(dataSet[0][key]))
-      .map(el => {
-        return { label: el, value: el };
-      });
+      .filter(key => !isNaN(dataSet[0][key]));
   }
 
   setUsData() {
@@ -82,6 +82,20 @@ export class NationalComponent implements OnInit {
 
   usRecordSelected(event) {
     this.setUsData();
+  }
+
+  selectProperties() {
+    let ref = this.modal.open(StateSelectorComponent, {
+      maxHeight: '90vh',
+      width: '400px'
+    });
+    ref.componentInstance.states = this.recordProperties;
+    ref.componentInstance.title = 'Select Properties';
+    ref.componentInstance.statesSelected.pipe(first()).subscribe(r => {
+      this.filterValues = r;
+      this.setUsData();
+      ref.close();
+    });
   }
 
 }

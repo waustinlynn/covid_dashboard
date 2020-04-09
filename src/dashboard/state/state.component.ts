@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DashService } from '../dash.service';
+import { MatDialog } from '@angular/material/dialog';
+import { StateSelectorComponent } from '../state-selector/state-selector.component';
+import { first } from 'rxjs/operators';
 
 @Component({
   templateUrl: './state.component.html',
@@ -16,13 +19,15 @@ export class StateComponent implements OnInit {
   states: string[] = [];
   properties: string[] = [];
   filterProperty: string = 'positiveIncrease';
+  recordProperties: any[] = [];
 
-  constructor(private dashService: DashService) { }
+  constructor(private dashService: DashService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.dashService.getStateCurrent().subscribe(r => {
       this.gaData = r.find(r => r.state == 'GA');
       this.states = r.map(r => r.state);
+      this.setRecordProperties(this.gaData);
     });
 
     this.dashService.getStateDaily().subscribe(r => {
@@ -35,13 +40,20 @@ export class StateComponent implements OnInit {
     });
   }
 
+  setRecordProperties(dataSet) {
+    this.recordProperties = Object.keys(dataSet)
+      .filter(key => !isNaN(dataSet[key]))
+      .map(el => {
+        return { label: el, value: el };
+      });
+  }
+
   reloadStates(states: string[]) {
     this.data = this.stateOrigData.reduce(this.historicalReduction(states), this._seedDataObj(states));
     this.data.labels = this.dateLabels;
   }
 
   statesSelected(event) {
-    console.log(event);
     this.applicableStates = event;
     this.reloadStates(event);
   }
@@ -111,6 +123,23 @@ export class StateComponent implements OnInit {
       }
     });
     return obj;
+  }
+
+  selectStates() {
+    let ref = this.dialog.open(StateSelectorComponent, {
+      maxHeight: '90vh',
+      width: '400px'
+    });
+    ref.componentInstance.states = this.states;
+    ref.componentInstance.statesSelected.pipe(first()).subscribe(r => {
+      this.statesSelected(r);
+      ref.close();
+    });
+  }
+
+  propertySelected(event) {
+    this.filterProperty = event.value;
+    this.reloadStates(this.applicableStates);
   }
 
 }

@@ -1,6 +1,13 @@
 <div style="width: 400px">
-    <app-state-selector [states]="states" (statesSelected)="statesSelected($event)"></app-state-selector>
-    <span class="example-spacer"></span>
-    <app-state-selector [states]="properties" (statesSelected)="propertiesSelected($event)"></app-state-selector>
+    <button mat-raised-button (click)="selectStates()">Select States</button>
+    &nbsp;
+    <mat-form-field>
+        <mat-label>Select property</mat-label>
+        <mat-select (selectionChange)="propertySelected($event)">
+            <mat-option *ngFor="let prop of recordProperties" [value]="prop.value">
+                {{prop.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
 </div>
 <p-chart type="line" [data]="data"></p-chart>

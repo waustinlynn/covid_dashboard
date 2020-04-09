@@ -14,6 +14,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
 
 import { StateComponent } from './state/state.component';
 import { NationalComponent } from './national/national.component';
@@ -32,8 +34,11 @@ import { StateSelectorComponent } from './state-selector/state-selector.componen
     MatDividerModule,
     MatCheckboxModule,
     MatButtonModule,
-    MatListModule
+    MatListModule,
+    MatDialogModule,
+    MatCardModule
   ],
-  providers: [DashService]
+  providers: [DashService],
+  entryComponents: [StateSelectorComponent]
 })
 export class DashboardModule { }
