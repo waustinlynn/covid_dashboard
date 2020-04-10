@@ -27,13 +27,14 @@ export class StateComponent implements OnInit {
     this.dashService.getStateCurrent().subscribe(r => {
       this.gaData = r.find(r => r.state == 'GA');
       this.states = r.map(r => r.state);
-      this.setRecordProperties(this.gaData);
+      // this.setRecordProperties(this.gaData);
     });
 
     this.dashService.getStateDaily().subscribe(r => {
       this.gaHistoricalData = r.filter(r => r.state == 'GA');
       this.dateLabels = this.gaHistoricalData.map(el => el.date).reverse();
       // this.data = this.getGaData();
+      this.setRecordProperties(r[0]);
       this.stateOrigData = r;
       this.properties = Object.keys(this.stateOrigData[0]).filter(key => !isNaN(this.stateOrigData[0][key]));
       this.reloadStates(this.applicableStates);
