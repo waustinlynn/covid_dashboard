@@ -1,5 +1,5 @@
 {
     "appService.showBuildDuringDeployPrompt": false,
     "appService.defaultWebAppToDeploy": "/subscriptions/b7de733f-67a8-4e29-96e4-240008c78ab8/resourceGroups/alynn-covid/providers/Microsoft.Web/sites/covidtrending",
-    "appService.deploySubpath": ""
+    "appService.deploySubpath": "dist\\covid-dashboard"
 }
