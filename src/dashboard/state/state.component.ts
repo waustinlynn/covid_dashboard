@@ -20,6 +20,7 @@ export class StateComponent implements OnInit {
   properties: string[] = [];
   filterProperty: string = 'positiveIncrease';
   recordProperties: any[] = [];
+  showLastDats: number = 29;
 
   constructor(private dashService: DashService, public dialog: MatDialog) { }
 
@@ -32,7 +33,7 @@ export class StateComponent implements OnInit {
 
     this.dashService.getStateDaily().subscribe(r => {
       this.gaHistoricalData = r.filter(r => r.state == 'GA');
-      this.dateLabels = this.gaHistoricalData.map(el => el.date).reverse();
+      this.dateLabels = this.gaHistoricalData.map(el => el.date).slice(0, this.showLastDats).reverse();
       // this.data = this.getGaData();
       this.setRecordProperties(r[0]);
       this.stateOrigData = r;
@@ -101,7 +102,7 @@ export class StateComponent implements OnInit {
       }
       if (currIdx == origArr.length - 1) {
         states.forEach(st => {
-          acc[st].data = acc[st].data.reverse();
+          acc[st].data = acc[st].data.slice(0, this.showLastDats).reverse();
           acc.datasets.push({ ...acc[st] });
           delete acc[st];
         });

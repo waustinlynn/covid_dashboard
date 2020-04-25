@@ -13,6 +13,7 @@ export class NationalComponent implements OnInit {
   usDataOrig: any[];
   usData: any;
   filterValues: string[] = ['positiveIncrease'];
+  showLastDays: number = 29;
 
   recordProperties: any[];
   constructor(private dashService: DashService, public modal: MatDialog) { }
@@ -38,10 +39,10 @@ export class NationalComponent implements OnInit {
       acc.labels.push(val.date);
       if (currIdx == origArr.length - 1) {
         this.filterValues.forEach(filterVal => {
-          acc[filterVal].data = acc[filterVal].data.reverse();
+          acc[filterVal].data = acc[filterVal].data.slice(0, this.showLastDays).reverse();
           acc.datasets.push(acc[filterVal]);
         });
-        acc.labels = acc.labels.reverse();
+        acc.labels = acc.labels.slice(0, this.showLastDays).reverse();
       }
       return acc;
     }, this._initObject());
